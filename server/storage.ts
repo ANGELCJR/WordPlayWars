@@ -10,7 +10,7 @@ import {
   type InsertUserStats,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
@@ -34,15 +34,15 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  // User operations for custom authentication
+  // User operations
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user;
+    return user || undefined;
   }
 
   async createUser(userData: InsertUser): Promise<User> {
@@ -59,32 +59,29 @@ export class DatabaseStorage implements IStorage {
       .insert(gameScores)
       .values(gameScore)
       .returning();
-    
-    // Update user stats after saving score
-    await this.updateUserStats(gameScore.userId, savedScore);
-    
     return savedScore;
   }
 
-  async getUserGameScores(userId: string, limit = 50): Promise<GameScore[]> {
-    return await db
+  async getUserGameScores(userId: number, limit = 50): Promise<GameScore[]> {
+    const scores = await db
       .select()
       .from(gameScores)
       .where(eq(gameScores.userId, userId))
       .orderBy(desc(gameScores.createdAt))
       .limit(limit);
+    return scores;
   }
 
   // Statistics operations
-  async getUserStats(userId: string): Promise<UserStats | undefined> {
+  async getUserStats(userId: number): Promise<UserStats | undefined> {
     const [stats] = await db
       .select()
       .from(userStats)
       .where(eq(userStats.userId, userId));
-    return stats;
+    return stats || undefined;
   }
 
-  async updateUserStats(userId: string, gameScore: GameScore): Promise<UserStats> {
+  async updateUserStats(userId: number, gameScore: GameScore): Promise<UserStats> {
     const existingStats = await this.getUserStats(userId);
     
     if (existingStats) {
@@ -93,19 +90,9 @@ export class DatabaseStorage implements IStorage {
       const newTotalScore = existingStats.totalScore + gameScore.score;
       const newAverageScore = Math.round(newTotalScore / newTotalGames);
       const newBestScore = Math.max(existingStats.bestScore, gameScore.score);
+      const newLongestStreak = Math.max(existingStats.longestStreak, gameScore.longestStreak);
       const newTotalWordsCorrect = existingStats.totalWordsCorrect + gameScore.wordsCorrect;
       
-      // Update streak logic
-      let newCurrentStreak = existingStats.currentStreak;
-      let newLongestStreak = existingStats.longestStreak;
-      
-      if (gameScore.wordsCorrect > 0) {
-        newCurrentStreak += 1;
-        newLongestStreak = Math.max(newLongestStreak, newCurrentStreak);
-      } else {
-        newCurrentStreak = 0;
-      }
-
       const [updatedStats] = await db
         .update(userStats)
         .set({
@@ -113,7 +100,6 @@ export class DatabaseStorage implements IStorage {
           totalScore: newTotalScore,
           averageScore: newAverageScore,
           bestScore: newBestScore,
-          currentStreak: newCurrentStreak,
           longestStreak: newLongestStreak,
           totalWordsCorrect: newTotalWordsCorrect,
           favoriteGameMode: gameScore.gameMode,
@@ -131,12 +117,12 @@ export class DatabaseStorage implements IStorage {
         totalScore: gameScore.score,
         averageScore: gameScore.score,
         bestScore: gameScore.score,
-        currentStreak: gameScore.wordsCorrect > 0 ? 1 : 0,
-        longestStreak: gameScore.wordsCorrect > 0 ? 1 : 0,
+        currentStreak: gameScore.longestStreak,
+        longestStreak: gameScore.longestStreak,
         totalWordsCorrect: gameScore.wordsCorrect,
         favoriteGameMode: gameScore.gameMode,
       };
-
+      
       const [createdStats] = await db
         .insert(userStats)
         .values(newStats)
@@ -151,7 +137,7 @@ export class DatabaseStorage implements IStorage {
     stats: UserStats;
     rank: number;
   }>> {
-    const query = db
+    const statsQuery = await db
       .select({
         user: users,
         stats: userStats,
@@ -161,11 +147,9 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(userStats.bestScore))
       .limit(limit);
 
-    const results = await query;
-    
-    return results.map((result, index) => ({
-      user: result.user,
-      stats: result.stats,
+    return statsQuery.map((row, index) => ({
+      user: row.user,
+      stats: row.stats,
       rank: index + 1,
     }));
   }

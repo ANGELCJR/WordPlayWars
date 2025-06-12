@@ -6,7 +6,7 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
 import { User } from "@shared/schema";
-import connectPg from "connect-pg-simple";
+import MemoryStore from "memorystore";
 
 declare global {
   namespace Express {
@@ -15,6 +15,7 @@ declare global {
 }
 
 const scryptAsync = promisify(scrypt);
+const MemStoreSession = MemoryStore(session);
 
 async function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
@@ -30,20 +31,17 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
-  const PostgresSessionStore = connectPg(session);
-  
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
+    secret: process.env.SESSION_SECRET || "development-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: new PostgresSessionStore({
-      conString: process.env.DATABASE_URL,
-      createTableIfMissing: true,
+    store: new MemStoreSession({
+      checkPeriod: 86400000,
     }),
     cookie: {
+      secure: false,
       httpOnly: true,
-      secure: false, // Set to true in production with HTTPS
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
   };
 
@@ -78,51 +76,27 @@ export function setupAuth(app: Express) {
 
   app.post("/api/register", async (req, res, next) => {
     try {
-      const { username, email, password, firstName, lastName } = req.body;
-      
-      // Check if user already exists
-      const existingUser = await storage.getUserByUsername(username);
+      const existingUser = await storage.getUserByUsername(req.body.username);
       if (existingUser) {
-        return res.status(400).json({ error: "Username already exists" });
+        return res.status(400).json({ message: "Username already exists" });
       }
 
-      // Create new user
-      const hashedPassword = await hashPassword(password);
       const user = await storage.createUser({
-        username,
-        email,
-        password: hashedPassword,
-        firstName,
-        lastName,
+        ...req.body,
+        password: await hashPassword(req.body.password),
       });
 
-      // Log in the user automatically
       req.login(user, (err) => {
         if (err) return next(err);
-        res.status(201).json({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          profileImageUrl: user.profileImageUrl,
-        });
+        res.status(201).json(user);
       });
     } catch (error) {
-      next(error);
+      res.status(500).json({ message: "Registration failed" });
     }
   });
 
   app.post("/api/login", passport.authenticate("local"), (req, res) => {
-    const user = req.user as User;
-    res.status(200).json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      profileImageUrl: user.profileImageUrl,
-    });
+    res.status(200).json(req.user);
   });
 
   app.post("/api/logout", (req, res, next) => {
@@ -133,18 +107,7 @@ export function setupAuth(app: Express) {
   });
 
   app.get("/api/user", (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.sendStatus(401);
-    }
-    
-    const user = req.user as User;
-    res.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      profileImageUrl: user.profileImageUrl,
-    });
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    res.json(req.user);
   });
 }

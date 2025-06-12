@@ -56,10 +56,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Add user endpoint for authentication
+  app.get("/api/user", requireAuth, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
   // Statistics routes
   app.get("/api/stats/user", requireAuth, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const stats = await storage.getUserStats(userId);
       
       if (!stats) {
