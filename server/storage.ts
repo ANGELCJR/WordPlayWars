@@ -3,7 +3,7 @@ import {
   gameScores,
   userStats,
   type User,
-  type UpsertUser,
+  type InsertUser,
   type GameScore,
   type InsertGameScore,
   type UserStats,
@@ -14,10 +14,10 @@ import { eq, desc, sql } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
-  // User operations
-  // (IMPORTANT) these user operations are mandatory for Replit Auth.
-  getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
+  // User operations for custom authentication
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
   
   // Game operations
   saveGameScore(gameScore: InsertGameScore): Promise<GameScore>;

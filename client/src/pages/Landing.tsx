@@ -93,10 +93,10 @@ export default function Landing() {
                 </div>
               ) : (
                 <Button
-                  onClick={() => window.location.href = "/api/login"}
+                  onClick={() => setLocation("/auth")}
                   variant="outline"
                   size="sm"
-                  className="border-game-primary text-game-primary hover:bg-game-primary hover:text-white"
+                  className="border-2 border-purple-500 text-purple-400 hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 bg-gray-800/50 backdrop-blur-sm"
                 >
                   <User className="w-4 h-4 mr-2" />
                   Sign In
