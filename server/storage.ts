@@ -21,11 +21,11 @@ export interface IStorage {
   
   // Game operations
   saveGameScore(gameScore: InsertGameScore): Promise<GameScore>;
-  getUserGameScores(userId: string, limit?: number): Promise<GameScore[]>;
+  getUserGameScores(userId: number, limit?: number): Promise<GameScore[]>;
   
   // Statistics operations
-  getUserStats(userId: string): Promise<UserStats | undefined>;
-  updateUserStats(userId: string, gameScore: GameScore): Promise<UserStats>;
+  getUserStats(userId: number): Promise<UserStats | undefined>;
+  updateUserStats(userId: number, gameScore: GameScore): Promise<UserStats>;
   getLeaderboard(gameMode?: string, limit?: number): Promise<Array<{
     user: User;
     stats: UserStats;
@@ -34,24 +34,21 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  // User operations
-  // (IMPORTANT) these user operations are mandatory for Replit Auth.
-  async getUser(id: string): Promise<User | undefined> {
+  // User operations for custom authentication
+  async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
 
-  async upsertUser(userData: UpsertUser): Promise<User> {
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(userData: InsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
       .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
       .returning();
     return user;
   }

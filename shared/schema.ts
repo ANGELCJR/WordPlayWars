@@ -25,7 +25,7 @@ export const sessions = pgTable(
 
 // User storage table for custom authentication
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   username: varchar("username", { length: 50 }).unique().notNull(),
   email: varchar("email").unique(),
   password: varchar("password", { length: 255 }).notNull(),
@@ -38,8 +38,8 @@ export const users = pgTable("users", {
 
 // Game scores table
 export const gameScores = pgTable("game_scores", {
-  id: serial("id").primaryKey(),
-  userId: varchar("user_id").notNull().references(() => users.id),
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  userId: integer("user_id").notNull().references(() => users.id),
   gameMode: varchar("game_mode").notNull(), // 'anagram', 'word_ladder', 'speed_type'
   score: integer("score").notNull(),
   wordsCorrect: integer("words_correct").notNull(),
@@ -52,8 +52,8 @@ export const gameScores = pgTable("game_scores", {
 
 // User statistics table for aggregated data
 export const userStats = pgTable("user_stats", {
-  id: serial("id").primaryKey(),
-  userId: varchar("user_id").notNull().references(() => users.id).unique(),
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  userId: integer("user_id").notNull().references(() => users.id).unique(),
   totalGames: integer("total_games").notNull().default(0),
   totalScore: integer("total_score").notNull().default(0),
   bestScore: integer("best_score").notNull().default(0),
