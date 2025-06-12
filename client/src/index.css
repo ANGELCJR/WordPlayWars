@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(257, 89%, 67%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Game-specific colors */
+  --game-primary: hsl(249, 82%, 66%);
+  --game-secondary: hsl(251, 77%, 68%);
+  --game-accent: hsl(45, 93%, 47%);
+  --game-success: hsl(158, 64%, 52%);
+  --game-danger: hsl(0, 84%, 60%);
+  --game-coral: hsl(0, 72%, 69%);
+  --game-teal: hsl(173, 58%, 58%);
+}
+
+.dark {
+  --background: hsl(222, 84%, 5%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(217, 33%, 17%);
+  --muted-foreground: hsl(215, 20%, 65%);
+  --popover: hsl(222, 84%, 5%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(222, 84%, 5%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(217, 33%, 17%);
+  --input: hsl(217, 33%, 17%);
+  --primary: hsl(249, 82%, 66%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(217, 33%, 17%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(217, 33%, 17%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(212, 95%, 83%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-gray-900 text-white;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .game-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--game-primary)), hsl(var(--game-secondary)));
+  }
+  
+  .game-gradient-accent {
+    background: linear-gradient(135deg, hsl(var(--game-accent)), hsl(var(--game-coral)));
+  }
+  
+  .game-gradient-success {
+    background: linear-gradient(135deg, hsl(var(--game-success)), hsl(var(--game-teal)));
+  }
+
+  .text-game-primary {
+    color: hsl(var(--game-primary));
+  }
+  
+  .text-game-secondary {
+    color: hsl(var(--game-secondary));
+  }
+  
+  .text-game-accent {
+    color: hsl(var(--game-accent));
+  }
+  
+  .text-game-success {
+    color: hsl(var(--game-success));
+  }
+  
+  .text-game-danger {
+    color: hsl(var(--game-danger));
+  }
+  
+  .text-game-coral {
+    color: hsl(var(--game-coral));
+  }
+  
+  .text-game-teal {
+    color: hsl(var(--game-teal));
+  }
+
+  .bg-game-primary {
+    background-color: hsl(var(--game-primary));
+  }
+  
+  .bg-game-secondary {
+    background-color: hsl(var(--game-secondary));
+  }
+  
+  .bg-game-accent {
+    background-color: hsl(var(--game-accent));
+  }
+  
+  .bg-game-success {
+    background-color: hsl(var(--game-success));
+  }
+  
+  .bg-game-danger {
+    background-color: hsl(var(--game-danger));
+  }
+  
+  .bg-game-coral {
+    background-color: hsl(var(--game-coral));
+  }
+  
+  .bg-game-teal {
+    background-color: hsl(var(--game-teal));
+  }
+
+  .border-game-primary {
+    border-color: hsl(var(--game-primary));
+  }
+  
+  .border-game-secondary {
+    border-color: hsl(var(--game-secondary));
+  }
+  
+  .border-game-accent {
+    border-color: hsl(var(--game-accent));
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+}
