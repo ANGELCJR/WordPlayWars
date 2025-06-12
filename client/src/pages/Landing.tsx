@@ -123,8 +123,7 @@ export default function Landing() {
               <span className="bg-gradient-to-r from-game-primary via-game-secondary to-game-coral bg-clip-text text-transparent">
                 WordPlay
               </span>
-              <br />
-              <span className="text-white">Wars</span>
+              <span className="text-white"> Wars</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto">
               Battle opponents in real-time word puzzles. Unscramble, race, and dominate the leaderboard!
