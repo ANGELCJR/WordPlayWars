@@ -37,18 +37,10 @@ export default function Landing() {
   ];
 
   const handleQuickPlay = () => {
-    if (!isAuthenticated) {
-      window.location.href = "/api/login";
-      return;
-    }
     setLocation("/game?mode=anagram");
   };
 
   const handleGameModeSelect = (mode: string) => {
-    if (!isAuthenticated) {
-      window.location.href = "/api/login";
-      return;
-    }
     if (mode === "anagram") {
       setLocation(`/game?mode=${mode}`);
     }
