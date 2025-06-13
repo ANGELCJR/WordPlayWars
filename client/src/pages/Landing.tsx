@@ -3,7 +3,72 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gamepad, Play, Users, RotateCcw, Link2, Zap, Trophy, User, Shuffle, ArrowUpDown, Timer, Keyboard, Target, Layers3, Gauge } from "lucide-react";
+import { Gamepad, Play, Users, RotateCcw, Link2, Zap, Trophy, User } from "lucide-react";
+
+// Custom Game Icons
+const AnagramIcon = () => (
+  <svg viewBox="0 0 64 64" className="w-full h-full">
+    <defs>
+      <linearGradient id="anagram-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#ff6b35" />
+        <stop offset="100%" stopColor="#f7931e" />
+      </linearGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge> 
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <g filter="url(#glow)">
+      <circle cx="32" cy="32" r="28" fill="url(#anagram-grad)" opacity="0.3"/>
+      <text x="18" y="28" fontSize="16" fontWeight="bold" fill="white" className="animate-pulse">A</text>
+      <text x="38" y="28" fontSize="16" fontWeight="bold" fill="white" className="animate-pulse" style={{animationDelay: '0.2s'}}>N</text>
+      <text x="28" y="44" fontSize="16" fontWeight="bold" fill="white" className="animate-pulse" style={{animationDelay: '0.4s'}}>T</text>
+      <path d="M 20,35 Q 32,25 44,35" stroke="white" strokeWidth="2" fill="none" strokeDasharray="4,2" className="animate-pulse"/>
+    </g>
+  </svg>
+);
+
+const WordLadderIcon = () => (
+  <svg viewBox="0 0 64 64" className="w-full h-full">
+    <defs>
+      <linearGradient id="ladder-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#14b8a6" />
+        <stop offset="100%" stopColor="#06b6d4" />
+      </linearGradient>
+    </defs>
+    <g>
+      <rect x="16" y="12" width="32" height="6" rx="3" fill="url(#ladder-grad)" className="animate-pulse"/>
+      <rect x="16" y="22" width="32" height="6" rx="3" fill="url(#ladder-grad)" className="animate-pulse" style={{animationDelay: '0.3s'}}/>
+      <rect x="16" y="32" width="32" height="6" rx="3" fill="url(#ladder-grad)" className="animate-pulse" style={{animationDelay: '0.6s'}}/>
+      <rect x="16" y="42" width="32" height="6" rx="3" fill="url(#ladder-grad)" className="animate-pulse" style={{animationDelay: '0.9s'}}/>
+      <path d="M 20,15 L 20,45" stroke="white" strokeWidth="3" fill="none"/>
+      <path d="M 44,15 L 44,45" stroke="white" strokeWidth="3" fill="none"/>
+      <circle cx="32" cy="8" r="3" fill="#fbbf24" className="animate-bounce"/>
+    </g>
+  </svg>
+);
+
+const SpeedTypeIcon = () => (
+  <svg viewBox="0 0 64 64" className="w-full h-full">
+    <defs>
+      <linearGradient id="speed-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fbbf24" />
+        <stop offset="100%" stopColor="#f59e0b" />
+      </linearGradient>
+    </defs>
+    <g>
+      <circle cx="32" cy="32" r="26" fill="none" stroke="url(#speed-grad)" strokeWidth="4"/>
+      <circle cx="32" cy="32" r="20" fill="none" stroke="white" strokeWidth="2" opacity="0.5"/>
+      <circle cx="32" cy="32" r="14" fill="none" stroke="white" strokeWidth="1" opacity="0.3"/>
+      <line x1="32" y1="32" x2="32" y2="16" stroke="white" strokeWidth="3" strokeLinecap="round" className="animate-spin" style={{transformOrigin: '32px 32px', animationDuration: '2s'}}/>
+      <circle cx="32" cy="32" r="3" fill="white"/>
+      <text x="32" y="52" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">WPM</text>
+    </g>
+  </svg>
+);
 
 export default function Landing() {
   const [, setLocation] = useLocation();
@@ -15,7 +80,7 @@ export default function Landing() {
       id: "anagram",
       title: "Anagram Attack",
       description: "Unscramble letters to form words as fast as possible",
-      icon: Target,
+      icon: AnagramIcon,
       color: "game-coral",
       available: true,
     },
@@ -23,7 +88,7 @@ export default function Landing() {
       id: "word_ladder",
       title: "Word Ladder",
       description: "Transform words by changing one letter at a time",
-      icon: Layers3,
+      icon: WordLadderIcon,
       color: "game-teal",
       available: true,
     },
@@ -31,7 +96,7 @@ export default function Landing() {
       id: "speed_type",
       title: "Speed Type",
       description: "Type valid words as fast as you can in 60 seconds",
-      icon: Gauge,
+      icon: SpeedTypeIcon,
       color: "game-accent",
       available: true,
     },
@@ -197,9 +262,9 @@ export default function Landing() {
                 >
                   <CardContent className="p-8 text-center relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors[mode.color as keyof typeof gradientColors]} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}></div>
-                    <div className={`text-4xl mb-6 group-hover:scale-125 transition-all duration-500 relative z-10`}>
-                      <div className={`w-16 h-16 mx-auto rounded-full bg-gradient-to-br ${gradientColors[mode.color as keyof typeof gradientColors]} p-4 shadow-lg`}>
-                        <IconComponent className="w-full h-full text-white" />
+                    <div className={`text-4xl mb-6 group-hover:scale-110 transition-all duration-500 relative z-10`}>
+                      <div className="w-20 h-20 mx-auto">
+                        <IconComponent />
                       </div>
                     </div>
                     <h3 className="text-2xl font-bold mb-3 text-white relative z-10">{mode.title}</h3>
