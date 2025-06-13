@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Gamepad, Play, Users, RotateCcw, Link, Keyboard, Trophy, User } from "lucide-react";
 
 export default function Landing() {
   const [, setLocation] = useLocation();
-  const { user, isAuthenticated, logoutMutation } = useAuth();
+  const { user, isLoading, logoutMutation } = useAuth();
+  const isAuthenticated = !!user;
 
   const gameModesData = [
     {
@@ -93,7 +94,7 @@ export default function Landing() {
                       {user.firstName || user.email?.split("@")[0] || "User"}
                     </span>
                     <span className="text-xs text-game-accent">
-                      {user.stats?.totalScore || 0} pts
+                      0 pts
                     </span>
                   </div>
                   <Button
