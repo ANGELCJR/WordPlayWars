@@ -38,8 +38,12 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Run database migrations first
-  await runMigrations();
+  // Run database migrations first (non-blocking)
+  try {
+    await runMigrations();
+  } catch (error: any) {
+    console.warn("Migration failed, continuing server startup:", error?.message || error);
+  }
   
   const server = await registerRoutes(app);
 
