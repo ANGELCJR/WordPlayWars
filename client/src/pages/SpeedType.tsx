@@ -40,11 +40,8 @@ export default function SpeedType() {
   });
 
   useEffect(() => {
-    if (!user) {
-      setLocation("/auth");
-      return;
-    }
-  }, [user, setLocation]);
+    // Speed Type is available for all users
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

@@ -50,12 +50,8 @@ export default function WordLadder() {
   });
 
   useEffect(() => {
-    if (!user) {
-      setLocation("/auth");
-      return;
-    }
     startNewGame();
-  }, [user, setLocation]);
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gamepad, Play, Users, RotateCcw, Link2, Zap, Trophy, User, Shuffle, ArrowUpDown, Timer, Keyboard } from "lucide-react";
+import { Gamepad, Play, Users, RotateCcw, Link2, Zap, Trophy, User, Shuffle, ArrowUpDown, Timer, Keyboard, Target, Layers3, Gauge } from "lucide-react";
 
 export default function Landing() {
   const [, setLocation] = useLocation();
@@ -15,7 +15,7 @@ export default function Landing() {
       id: "anagram",
       title: "Anagram Attack",
       description: "Unscramble letters to form words as fast as possible",
-      icon: Shuffle,
+      icon: Target,
       color: "game-coral",
       available: true,
     },
@@ -23,7 +23,7 @@ export default function Landing() {
       id: "word_ladder",
       title: "Word Ladder",
       description: "Transform words by changing one letter at a time",
-      icon: ArrowUpDown,
+      icon: Layers3,
       color: "game-teal",
       available: true,
     },
@@ -31,7 +31,7 @@ export default function Landing() {
       id: "speed_type",
       title: "Speed Type",
       description: "Type valid words as fast as you can in 60 seconds",
-      icon: Timer,
+      icon: Gauge,
       color: "game-accent",
       available: true,
     },
