@@ -7,7 +7,7 @@ import { Gamepad, Play, Users, RotateCcw, Link, Keyboard, Trophy, User } from "l
 
 export default function Landing() {
   const [, setLocation] = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logoutMutation } = useAuth();
 
   const gameModesData = [
     {
@@ -46,6 +46,10 @@ export default function Landing() {
     }
   };
 
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-x-hidden">
       {/* Navigation */}
@@ -78,19 +82,30 @@ export default function Landing() {
             
             <div className="flex items-center space-x-3">
               {isAuthenticated && user ? (
-                <div className="hidden sm:flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2">
-                  <div className="w-6 h-6 bg-game-teal rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold text-gray-900">
-                      {user.firstName?.[0] || user.email?.[0] || "U"}
+                <>
+                  <div className="hidden sm:flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2">
+                    <div className="w-6 h-6 bg-game-teal rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-gray-900">
+                        {user.firstName?.[0] || user.email?.[0] || "U"}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-300">
+                      {user.firstName || user.email?.split("@")[0] || "User"}
+                    </span>
+                    <span className="text-xs text-game-accent">
+                      {user.stats?.totalScore || 0} pts
                     </span>
                   </div>
-                  <span className="text-sm text-gray-300">
-                    {user.firstName || user.email?.split("@")[0] || "User"}
-                  </span>
-                  <span className="text-xs text-game-accent">
-                    {user.stats?.totalScore || 0} pts
-                  </span>
-                </div>
+                  <Button
+                    onClick={handleLogout}
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-red-500 text-red-400 hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white transition-all duration-300 bg-gray-800/50 backdrop-blur-sm"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </>
               ) : (
                 <Button
                   onClick={() => setLocation("/auth")}
