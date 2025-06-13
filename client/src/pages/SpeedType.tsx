@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Timer, Home, RefreshCw, Zap, Target } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { getRandomWord, isValidWord } from "@/lib/words";
 
 interface SpeedTypeState {
@@ -23,7 +22,6 @@ interface SpeedTypeState {
 
 export default function SpeedType() {
   const [, setLocation] = useLocation();
-  const { user } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
   const [gameState, setGameState] = useState<SpeedTypeState>({
     timeRemaining: 60,

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowUpDown, Home, RefreshCw, Check, X } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 
 interface WordLadderState {
   startWord: string;
@@ -33,7 +32,6 @@ const WORD_PAIRS = [
 
 export default function WordLadder() {
   const [, setLocation] = useLocation();
-  const { user } = useAuth();
   const [inputValue, setInputValue] = useState("");
   const [gameState, setGameState] = useState<WordLadderState>({
     startWord: "",
