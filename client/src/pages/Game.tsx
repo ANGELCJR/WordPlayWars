@@ -480,10 +480,7 @@ export default function Game() {
                       {gameState.scrambledLetters.map((letter, index) => (
                         <div
                           key={index}
-                          className="w-20 h-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl font-black shadow-2xl shadow-orange-500/50 transform hover:scale-110 hover:rotate-6 transition-all duration-300 cursor-pointer border-2 border-white/20 animate-pulse hover:animate-none"
-                          style={{
-                            animationDelay: `${index * 0.1}s`
-                          }}
+                          className="w-20 h-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg shadow-orange-500/30 transform hover:scale-105 transition-all duration-200 cursor-pointer border-2 border-white/10"
                         >
                           <span className="text-white drop-shadow-lg">{letter}</span>
                         </div>

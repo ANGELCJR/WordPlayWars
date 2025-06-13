@@ -176,8 +176,17 @@ export default function WordLadder() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-pink-900/20 text-white overflow-hidden relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -inset-10 opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-4">
@@ -210,15 +219,15 @@ export default function WordLadder() {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Game Instructions */}
-            <Card className="bg-gray-800/80 backdrop-blur-lg border-gray-600">
+            <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-teal-500/30 backdrop-blur-sm shadow-2xl shadow-teal-500/20">
               <CardHeader>
-                <CardTitle className="text-teal-400">How to Play</CardTitle>
+                <CardTitle className="bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">How to Play</CardTitle>
               </CardHeader>
               <CardContent className="text-gray-300 space-y-3">
-                <p>Transform the start word into the target word by changing one letter at a time.</p>
-                <p>Each step must be a valid word.</p>
-                <p>Complete the transformation in as few steps as possible!</p>
-                <div className="mt-4 p-3 bg-gray-700/50 rounded-lg">
+                <p className="flex items-center"><span className="text-teal-400 mr-2">•</span> Transform the start word into the target word by changing one letter at a time.</p>
+                <p className="flex items-center"><span className="text-cyan-400 mr-2">•</span> Each step must be a valid word.</p>
+                <p className="flex items-center"><span className="text-blue-400 mr-2">•</span> Complete the transformation in as few steps as possible!</p>
+                <div className="mt-4 p-3 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 border border-teal-500/30 rounded-lg shadow-lg shadow-teal-500/20">
                   <p className="text-sm">
                     <strong className="text-teal-400">Example:</strong><br/>
                     COLD → CORD → WORD → WARD → WARM
@@ -228,12 +237,12 @@ export default function WordLadder() {
             </Card>
 
             {/* Main Game Area */}
-            <Card className="bg-gray-800/80 backdrop-blur-lg border-gray-600">
+            <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-teal-500/30 backdrop-blur-sm shadow-2xl shadow-teal-500/20">
               <CardHeader>
                 <CardTitle className="text-center">
-                  <span className="text-2xl font-bold text-teal-400">{gameState.startWord}</span>
+                  <span className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">{gameState.startWord}</span>
                   <ArrowUpDown className="w-6 h-6 mx-4 inline-block text-gray-400" />
-                  <span className="text-2xl font-bold text-cyan-400">{gameState.targetWord}</span>
+                  <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{gameState.targetWord}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

@@ -164,8 +164,17 @@ export default function SpeedType() {
   const promptWords = getRandomPromptWords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-yellow-900 to-orange-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-pink-900/20 text-white overflow-hidden relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -inset-10 opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-4">
@@ -201,15 +210,15 @@ export default function SpeedType() {
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Instructions */}
-            <Card className="bg-gray-800/80 backdrop-blur-lg border-gray-600">
+            <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-yellow-500/30 backdrop-blur-sm shadow-2xl shadow-yellow-500/20">
               <CardHeader>
-                <CardTitle className="text-yellow-400">How to Play</CardTitle>
+                <CardTitle className="bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">How to Play</CardTitle>
               </CardHeader>
               <CardContent className="text-gray-300 space-y-3">
-                <p>Type valid words as fast as you can in 60 seconds!</p>
-                <p>Press SPACE or ENTER after each word.</p>
-                <p>Only valid dictionary words count toward your score.</p>
-                <div className="mt-4 p-3 bg-gray-700/50 rounded-lg">
+                <p className="flex items-center"><span className="text-yellow-400 mr-2">•</span> Type valid words as fast as you can in 60 seconds!</p>
+                <p className="flex items-center"><span className="text-amber-400 mr-2">•</span> Press SPACE or ENTER after each word.</p>
+                <p className="flex items-center"><span className="text-orange-400 mr-2">•</span> Only valid dictionary words count toward your score.</p>
+                <div className="mt-4 p-3 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-lg shadow-lg shadow-yellow-500/20">
                   <p className="text-sm">
                     <strong className="text-yellow-400">Tip:</strong><br/>
                     Try these words: {promptWords.slice(0, 3).join(", ")}
@@ -220,9 +229,9 @@ export default function SpeedType() {
 
             {/* Main Game Area */}
             <div className="lg:col-span-2">
-              <Card className="bg-gray-800/80 backdrop-blur-lg border-gray-600 h-full">
+              <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-yellow-500/30 backdrop-blur-sm shadow-2xl shadow-yellow-500/20 h-full">
                 <CardHeader>
-                  <CardTitle className="text-center text-yellow-400">
+                  <CardTitle className="text-center bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                     {!gameState.gameStarted && !gameState.gameEnded && "Ready to Start?"}
                     {gameState.gameStarted && !gameState.gameEnded && "Type Valid Words!"}
                     {gameState.gameEnded && "Time's Up!"}
