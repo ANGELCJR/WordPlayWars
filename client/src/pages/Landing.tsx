@@ -42,8 +42,18 @@ export default function Landing() {
   };
 
   const handleGameModeSelect = (mode: string) => {
-    if (mode === "anagram") {
-      setLocation(`/game?mode=${mode}`);
+    switch (mode) {
+      case "anagram":
+        setLocation(`/game?mode=${mode}`);
+        break;
+      case "word_ladder":
+        setLocation("/word-ladder");
+        break;
+      case "speed_type":
+        setLocation("/speed-type");
+        break;
+      default:
+        break;
     }
   };
 
