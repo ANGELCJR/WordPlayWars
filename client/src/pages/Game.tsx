@@ -70,15 +70,32 @@ export default function Game() {
   // Hint functionality
   const useHint = () => {
     if (gameState.hintsUsed < gameState.maxHints) {
+      const currentHintNumber = gameState.hintsUsed + 1;
+      let hintMessage = "";
+      
+      switch (currentHintNumber) {
+        case 1:
+          hintMessage = `The word has ${gameState.currentWord.length} letters`;
+          break;
+        case 2:
+          hintMessage = `The word starts with "${gameState.currentWord[0]}"`;
+          break;
+        case 3:
+          hintMessage = `The word ends with "${gameState.currentWord[gameState.currentWord.length - 1]}"`;
+          break;
+        default:
+          hintMessage = `The word has ${gameState.currentWord.length} letters`;
+      }
+      
       setGameState(prev => ({
         ...prev,
         hintsUsed: prev.hintsUsed + 1
       }));
       
       toast({
-        title: "Hint",
-        description: `The word has ${gameState.currentWord.length} letters`,
-        duration: 3000,
+        title: `Hint ${currentHintNumber}`,
+        description: hintMessage,
+        duration: 4000,
       });
     }
   };
