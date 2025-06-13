@@ -347,12 +347,6 @@ export default function Landing() {
             </p>
             <div className="flex justify-center space-x-6">
               <button 
-                onClick={() => setLocation("/")}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                Play
-              </button>
-              <button 
                 onClick={() => setLocation("/leaderboard")}
                 className="text-gray-400 hover:text-white transition-colors"
               >

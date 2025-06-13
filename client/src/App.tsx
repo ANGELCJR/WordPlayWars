@@ -10,3 +10,4 @@ function Router() {
     </Switch>
   );
 }
+export default App;  // ADD THIS LINE
