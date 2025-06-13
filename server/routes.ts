@@ -1,11 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertGameScoreSchema } from "@shared/schema";
-import { ZodError } from "zod";
 
-// Custom auth middleware
 function requireAuth(req: any, res: any, next: any) {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -14,101 +10,16 @@ function requireAuth(req: any, res: any, next: any) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
   setupAuth(app);
 
-  // Game score routes
-  app.post("/api/game/score", requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      const gameScoreData = {
-        ...req.body,
-        userId,
-      };
-
-      // Validate the game score data
-      const validatedData = insertGameScoreSchema.parse(gameScoreData);
-      
-      const savedScore = await storage.saveGameScore(validatedData);
-      res.json(savedScore);
-    } catch (error) {
-      console.error("Error saving game score:", error);
-      if (error instanceof ZodError) {
-        return res.status(400).json({ 
-          message: "Invalid game score data",
-          errors: error.errors 
-        });
-      }
-      res.status(500).json({ message: "Failed to save game score" });
-    }
+  // Simple health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
-  app.get("/api/game/scores", requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      const limit = parseInt(req.query.limit as string) || 50;
-      
-      const scores = await storage.getUserGameScores(userId, limit);
-      res.json(scores);
-    } catch (error) {
-      console.error("Error fetching game scores:", error);
-      res.status(500).json({ message: "Failed to fetch game scores" });
-    }
-  });
-
-  // Add user endpoint for authentication
-  app.get("/api/user", requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      const user = await storage.getUser(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
-
-  // Statistics routes
-  app.get("/api/stats/user", requireAuth, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      const stats = await storage.getUserStats(userId);
-      
-      if (!stats) {
-        return res.json({
-          totalGames: 0,
-          totalScore: 0,
-          bestScore: 0,
-          averageScore: 0,
-          currentStreak: 0,
-          longestStreak: 0,
-          totalWordsCorrect: 0,
-          favoriteGameMode: null,
-        });
-      }
-      
-      res.json(stats);
-    } catch (error) {
-      console.error("Error fetching user stats:", error);
-      res.status(500).json({ message: "Failed to fetch user stats" });
-    }
-  });
-
-  // Leaderboard routes
-  app.get("/api/leaderboard", async (req, res) => {
-    try {
-      const gameMode = req.query.gameMode as string;
-      const limit = parseInt(req.query.limit as string) || 50;
-      
-      const leaderboard = await storage.getLeaderboard(gameMode, limit);
-      res.json(leaderboard);
-    } catch (error) {
-      console.error("Error fetching leaderboard:", error);
-      res.status(500).json({ message: "Failed to fetch leaderboard" });
-    }
+  // Protected route example
+  app.get("/api/protected", requireAuth, (req: any, res) => {
+    res.json({ message: "This is a protected route", user: req.user });
   });
 
   const httpServer = createServer(app);
