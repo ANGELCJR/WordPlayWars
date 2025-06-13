@@ -39,6 +39,8 @@ interface GameState {
   gameStarted: boolean;
   gameEnded: boolean;
   gameTimer: NodeJS.Timeout | null;
+  hintsUsed: number;
+  maxHints: number;
 }
 
 export default function Game() {
@@ -58,10 +60,35 @@ export default function Game() {
     gameStarted: false,
     gameEnded: false,
     gameTimer: null,
+    hintsUsed: 0,
+    maxHints: 3,
   });
   
   const [answer, setAnswer] = useState("");
   const [showResult, setShowResult] = useState<"correct" | "incorrect" | null>(null);
+
+  // Hint functionality
+  const useHint = () => {
+    if (gameState.hintsUsed < gameState.maxHints) {
+      setGameState(prev => ({
+        ...prev,
+        hintsUsed: prev.hintsUsed + 1
+      }));
+      
+      toast({
+        title: "Hint",
+        description: `The word has ${gameState.currentWord.length} letters`,
+        duration: 3000,
+      });
+    }
+  };
+
+  // Letter clicking functionality
+  const handleLetterClick = (letter: string) => {
+    if (gameState.gameStarted && !gameState.gameEnded) {
+      setAnswer(prev => prev + letter);
+    }
+  };
 
   // For demo purposes, we'll skip authentication
   // In a full version, this would redirect to login
@@ -92,6 +119,7 @@ export default function Game() {
       currentWord: word,
       scrambledLetters: scrambled,
       timeRemaining: 60,
+      hintsUsed: 0, // Reset hints for new round
     }));
     
     setAnswer("");
@@ -238,6 +266,8 @@ export default function Game() {
       gameStarted: false,
       gameEnded: false,
       gameTimer: null,
+      hintsUsed: 0,
+      maxHints: 3,
     });
     
     setAnswer("");
@@ -480,7 +510,8 @@ export default function Game() {
                       {gameState.scrambledLetters.map((letter, index) => (
                         <div
                           key={index}
-                          className="w-20 h-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg shadow-orange-500/30 transform hover:scale-105 transition-all duration-200 cursor-pointer border-2 border-white/10"
+                          onClick={() => handleLetterClick(letter)}
+                          className="w-20 h-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl font-black shadow-lg shadow-orange-500/30 transform hover:scale-105 transition-all duration-200 cursor-pointer border-2 border-white/10 hover:shadow-xl hover:shadow-orange-500/50 active:scale-95"
                         >
                           <span className="text-white drop-shadow-lg">{letter}</span>
                         </div>
@@ -508,9 +539,19 @@ export default function Game() {
                       Submit Answer
                     </Button>
                     
-                    {/* Hint */}
-                    <div className="mt-8 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg shadow-lg shadow-yellow-500/20">
-                      <span className="text-yellow-400 text-lg">💡 Hint: {gameState.currentWord.length} letters</span>
+                    {/* Hint Button */}
+                    <div className="mt-8 flex justify-center">
+                      <Button
+                        onClick={useHint}
+                        disabled={gameState.hintsUsed >= gameState.maxHints || !gameState.gameStarted || gameState.gameEnded}
+                        className={`px-8 py-3 text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-xl ${
+                          gameState.hintsUsed >= gameState.maxHints 
+                            ? "bg-gray-500 cursor-not-allowed opacity-50" 
+                            : "bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 shadow-yellow-500/50"
+                        }`}
+                      >
+                        💡 Get Hint ({gameState.maxHints - gameState.hintsUsed} left)
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
