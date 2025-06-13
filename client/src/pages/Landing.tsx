@@ -223,7 +223,7 @@ export default function Landing() {
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+          <div className="flex justify-center mb-12">
             <Button
               onClick={handleQuickPlay}
               className="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 px-10 py-6 text-xl font-bold transition-all duration-300 transform hover:scale-110 shadow-2xl hover:shadow-purple-500/50 border-0 text-white"
@@ -231,15 +231,6 @@ export default function Landing() {
             >
               <Play className="w-6 h-6 mr-3" />
               Quick Play
-            </Button>
-            <Button
-              variant="outline"
-              className="border-3 border-cyan-400 text-cyan-400 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-500 hover:text-white px-10 py-6 text-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-cyan-400/50 bg-gray-800/50 backdrop-blur-sm"
-              size="lg"
-              disabled
-            >
-              <Users className="w-6 h-6 mr-3" />
-              Multiplayer (Coming Soon)
             </Button>
           </div>
           
