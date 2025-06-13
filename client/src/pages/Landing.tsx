@@ -198,7 +198,9 @@ export default function Landing() {
                   <CardContent className="p-8 text-center relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors[mode.color as keyof typeof gradientColors]} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}></div>
                     <div className={`text-4xl mb-6 group-hover:scale-125 transition-all duration-500 relative z-10`}>
-                      <IconComponent className={`w-16 h-16 mx-auto text-transparent bg-gradient-to-br ${gradientColors[mode.color as keyof typeof gradientColors]} bg-clip-text`} />
+                      <div className={`w-16 h-16 mx-auto rounded-full bg-gradient-to-br ${gradientColors[mode.color as keyof typeof gradientColors]} p-4 shadow-lg`}>
+                        <IconComponent className="w-full h-full text-white" />
+                      </div>
                     </div>
                     <h3 className="text-2xl font-bold mb-3 text-white relative z-10">{mode.title}</h3>
                     <p className="text-gray-300 text-base leading-relaxed relative z-10">{mode.description}</p>
