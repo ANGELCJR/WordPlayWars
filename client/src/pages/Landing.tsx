@@ -148,20 +148,57 @@ export default function Landing() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-teal-900/20"></div>
+      <section className="relative pt-24 pb-32 overflow-hidden min-h-screen flex items-center">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 via-blue-900/40 to-teal-900/30"></div>
+        
+        {/* Floating Circles */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-blue-500/15 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-pink-500/15 rounded-full blur-3xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+        </div>
+
+        {/* Orbiting Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="w-96 h-96 border border-purple-500/20 rounded-full animate-spin" style={{animationDuration: '20s'}}></div>
+            <div className="absolute top-8 left-8 w-80 h-80 border border-teal-500/20 rounded-full animate-spin" style={{animationDuration: '15s', animationDirection: 'reverse'}}></div>
+            <div className="absolute top-16 left-16 w-64 h-64 border border-blue-500/20 rounded-full animate-spin" style={{animationDuration: '25s'}}></div>
+          </div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <div className="space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-game-primary via-game-secondary to-game-accent bg-clip-text text-transparent leading-tight">
-                WordPlay Wars
-              </h2>
-              <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+            <div className="space-y-6">
+              {/* Animated WordPlay Wars Title */}
+              <div className="relative">
+                <h2 className="text-6xl md:text-8xl font-bold leading-tight">
+                  <span className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent animate-pulse">
+                    Word
+                  </span>
+                  <span className="inline-block bg-gradient-to-r from-blue-400 via-teal-400 to-green-400 bg-clip-text text-transparent animate-pulse" style={{animationDelay: '0.5s'}}>
+                    Play
+                  </span>
+                  <br />
+                  <span className="inline-block bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent animate-pulse" style={{animationDelay: '1s'}}>
+                    Wars
+                  </span>
+                </h2>
+                
+                {/* Glowing effect behind text */}
+                <div className="absolute inset-0 -z-10">
+                  <h2 className="text-6xl md:text-8xl font-bold leading-tight blur-2xl opacity-30">
+                    <span className="inline-block text-purple-400">Word</span>
+                    <span className="inline-block text-teal-400">Play</span>
+                    <br />
+                    <span className="inline-block text-orange-400">Wars</span>
+                  </h2>
+                </div>
+              </div>
+              
+              <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Challenge your mind with anagram puzzles, compete with players worldwide, 
                 and climb the leaderboard
               </p>

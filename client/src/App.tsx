@@ -34,4 +34,4 @@ function App() {
   );
 }
 
-export default App;  // ADD THIS LINE IF MISSING
+export default App;
