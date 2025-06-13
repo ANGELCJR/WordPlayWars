@@ -1,4 +1,4 @@
-import { db, pool } from "./db";
+import { db } from "./db";
 import { sql } from "drizzle-orm";
 
 export async function runMigrations() {
@@ -21,7 +21,9 @@ export async function runMigrations() {
           password VARCHAR(255) NOT NULL,
           "firstName" VARCHAR(255),
           "lastName" VARCHAR(255),
-          "createdAt" TIMESTAMP DEFAULT NOW()
+          "profileImageUrl" VARCHAR(255),
+          "createdAt" TIMESTAMP DEFAULT NOW(),
+          "updatedAt" TIMESTAMP DEFAULT NOW()
         );
       `);
 

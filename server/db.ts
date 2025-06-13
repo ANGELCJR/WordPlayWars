@@ -1,11 +1,6 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from "@shared/schema";
-
-// Configure Neon for production environment
-neonConfig.webSocketConstructor = ws;
-neonConfig.poolQueryViaFetch = true;
 
 if (!process.env.DATABASE_URL) {
   throw new Error(
@@ -13,12 +8,6 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-// Create pool with connection timeout and retry settings
-export const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  connectionTimeoutMillis: 5000,
-  idleTimeoutMillis: 30000,
-  max: 20
-});
-
-export const db = drizzle({ client: pool, schema });
+// Use HTTP-based connection for better Render compatibility
+const sql = neon(process.env.DATABASE_URL);
+export const db = drizzle(sql, { schema });

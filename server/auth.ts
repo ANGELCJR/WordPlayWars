@@ -50,13 +50,7 @@ export function setupAuth(app: Express) {
         if (!user || !(await comparePasswords(password, user.password))) {
           return done(null, false);
         } else {
-          return done(null, {
-            id: user.id,
-            username: user.username,
-            email: user.email || undefined,
-            firstName: user.firstName || undefined,
-            lastName: user.lastName || undefined,
-          });
+          return done(null, user);
         }
       } catch (error) {
         return done(error);
@@ -68,17 +62,7 @@ export function setupAuth(app: Express) {
   passport.deserializeUser(async (id: number, done) => {
     try {
       const user = await storage.getUser(id);
-      if (user) {
-        done(null, {
-          id: user.id,
-          username: user.username,
-          email: user.email || undefined,
-          firstName: user.firstName || undefined,
-          lastName: user.lastName || undefined,
-        });
-      } else {
-        done(null, false);
-      }
+      done(null, user);
     } catch (error) {
       done(error);
     }
@@ -98,7 +82,7 @@ export function setupAuth(app: Express) {
       let existingUser;
       try {
         existingUser = await storage.getUserByUsername(req.body.username);
-      } catch (dbError) {
+      } catch (dbError: any) {
         console.error("Database error checking existing user:", dbError);
         return res.status(500).json({ message: "Database connection error" });
       }
@@ -123,26 +107,18 @@ export function setupAuth(app: Express) {
       try {
         user = await storage.createUser(userData);
         console.log("User created successfully:", user.id);
-      } catch (dbError) {
+      } catch (dbError: any) {
         console.error("Database error creating user:", dbError);
         return res.status(500).json({ message: "Failed to create user in database" });
       }
 
-      const sessionUser = {
-        id: user.id,
-        username: user.username,
-        email: user.email || undefined,
-        firstName: user.firstName || undefined,
-        lastName: user.lastName || undefined,
-      };
-
-      req.login(sessionUser, (err) => {
+      req.login(user, (err) => {
         if (err) {
           console.error("Login after registration failed:", err);
           return next(err);
         }
         console.log("User logged in successfully after registration");
-        res.status(201).json(sessionUser);
+        res.status(201).json(user);
       });
     } catch (error: any) {
       console.error("Registration error:", error);
