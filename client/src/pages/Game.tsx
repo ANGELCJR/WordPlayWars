@@ -75,16 +75,17 @@ export default function Game() {
       
       switch (currentHintNumber) {
         case 1:
-          hintMessage = `The word has ${gameState.currentWord.length} letters`;
-          break;
-        case 2:
           hintMessage = `The word starts with "${gameState.currentWord[0]}"`;
           break;
-        case 3:
+        case 2:
           hintMessage = `The word ends with "${gameState.currentWord[gameState.currentWord.length - 1]}"`;
           break;
+        case 3:
+          // Show the second letter as the final hint
+          hintMessage = `The second letter is "${gameState.currentWord[1]}"`;
+          break;
         default:
-          hintMessage = `The word has ${gameState.currentWord.length} letters`;
+          hintMessage = `The word starts with "${gameState.currentWord[0]}"`;
       }
       
       setGameState(prev => ({
