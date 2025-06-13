@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gamepad, Play, Users, RotateCcw, Link2, Zap, Trophy, User } from "lucide-react";
+import { Gamepad, Play, Users, RotateCcw, Link2, Zap, Trophy } from "lucide-react";
 
 // Custom Game Icons
 const AnagramIcon = () => (
@@ -55,49 +54,48 @@ const SpeedTypeIcon = () => (
   <svg viewBox="0 0 64 64" className="w-full h-full">
     <defs>
       <linearGradient id="speed-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#fbbf24" />
-        <stop offset="100%" stopColor="#f59e0b" />
+        <stop offset="0%" stopColor="#a855f7" />
+        <stop offset="100%" stopColor="#ec4899" />
       </linearGradient>
     </defs>
     <g>
-      <circle cx="32" cy="32" r="26" fill="none" stroke="url(#speed-grad)" strokeWidth="4"/>
-      <circle cx="32" cy="32" r="20" fill="none" stroke="white" strokeWidth="2" opacity="0.5"/>
-      <circle cx="32" cy="32" r="14" fill="none" stroke="white" strokeWidth="1" opacity="0.3"/>
-      <line x1="32" y1="32" x2="32" y2="16" stroke="white" strokeWidth="3" strokeLinecap="round" className="animate-spin" style={{transformOrigin: '32px 32px', animationDuration: '2s'}}/>
-      <circle cx="32" cy="32" r="3" fill="white"/>
-      <text x="32" y="52" fontSize="8" fontWeight="bold" fill="white" textAnchor="middle">WPM</text>
+      <circle cx="32" cy="32" r="26" fill="none" stroke="url(#speed-grad)" strokeWidth="4" strokeDasharray="8,4" className="animate-spin"/>
+      <rect x="20" y="28" width="24" height="8" rx="4" fill="url(#speed-grad)" className="animate-pulse"/>
+      <circle cx="16" cy="32" r="2" fill="#fbbf24" className="animate-ping"/>
+      <circle cx="48" cy="32" r="2" fill="#fbbf24" className="animate-ping" style={{animationDelay: '0.5s'}}/>
     </g>
   </svg>
 );
 
 export default function Landing() {
   const [, setLocation] = useLocation();
-  const { user, isLoading, logoutMutation } = useAuth();
-  const isAuthenticated = !!user;
 
-  const gameModesData = [
+  const gameModes = [
     {
       id: "anagram",
       title: "Anagram Attack",
-      description: "Unscramble letters to form words as fast as possible",
-      icon: AnagramIcon,
-      color: "game-coral",
+      description: "Unscramble letters to form words as fast as you can!",
+      icon: <AnagramIcon />,
+      color: "from-orange-500 to-red-500",
+      stats: "🎯 Word Puzzles",
       available: true,
     },
     {
       id: "word_ladder",
       title: "Word Ladder",
-      description: "Transform words by changing one letter at a time",
-      icon: WordLadderIcon,
-      color: "game-teal",
+      description: "Transform one word into another by changing one letter at a time.",
+      icon: <WordLadderIcon />,
+      color: "from-teal-500 to-cyan-500",
+      stats: "🔗 Logic Challenge",
       available: true,
     },
     {
       id: "speed_type",
       title: "Speed Type",
-      description: "Type valid words as fast as you can in 60 seconds",
-      icon: SpeedTypeIcon,
-      color: "game-accent",
+      description: "Type words as fast and accurately as possible!",
+      icon: <SpeedTypeIcon />,
+      color: "from-purple-500 to-pink-500",
+      stats: "⚡ Speed Challenge",
       available: true,
     },
   ];
@@ -122,10 +120,6 @@ export default function Landing() {
     }
   };
 
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
-
   return (
     <div className="min-h-screen bg-gray-900 text-white overflow-x-hidden">
       {/* Navigation */}
@@ -141,13 +135,7 @@ export default function Landing() {
               </h1>
             </div>
             
-            <div className="hidden md:flex items-center space-x-6">
-              <button 
-                onClick={() => setLocation("/")}
-                className="text-gray-300 hover:text-white transition-colors"
-              >
-                Play
-              </button>
+            <div className="flex items-center space-x-6">
               <button 
                 onClick={() => setLocation("/leaderboard")}
                 className="text-gray-300 hover:text-white transition-colors"
@@ -155,128 +143,225 @@ export default function Landing() {
                 Leaderboard
               </button>
             </div>
-            
-            <div className="flex items-center space-x-3">
-              {isAuthenticated && user ? (
-                <>
-                  <div className="hidden sm:flex items-center space-x-2 bg-gray-800 rounded-lg px-3 py-2">
-                    <div className="w-6 h-6 bg-game-teal rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-gray-900">
-                        {user.firstName?.[0] || user.email?.[0] || "U"}
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-300">
-                      {user.firstName || user.email?.split("@")[0] || "User"}
-                    </span>
-                    <span className="text-xs text-game-accent">
-                      0 pts
-                    </span>
-                  </div>
-                  <Button
-                    onClick={handleLogout}
-                    variant="outline"
-                    size="sm"
-                    className="border-2 border-red-500 text-red-400 hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white transition-all duration-300 bg-gray-800/50 backdrop-blur-sm"
-                  >
-                    <User className="w-4 h-4 mr-2" />
-                    Sign Out
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  onClick={() => setLocation("/auth")}
-                  variant="outline"
-                  size="sm"
-                  className="border-2 border-purple-500 text-purple-400 hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 bg-gray-800/50 backdrop-blur-sm"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  Sign In
-                </Button>
-              )}
-            </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-16 min-h-screen flex items-center justify-center relative overflow-hidden">
-        {/* Enhanced animated background with gradients */}
+      <section className="relative pt-24 pb-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-teal-900/20"></div>
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full animate-pulse-slow opacity-20 blur-xl"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full animate-bounce-slow opacity-25 blur-lg"></div>
-          <div className="absolute bottom-40 left-20 w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full animate-spin-slow opacity-20 blur-lg"></div>
-          <div className="absolute bottom-20 right-10 w-36 h-36 bg-gradient-to-br from-green-400 to-teal-500 rounded-full animate-pulse-slow opacity-15 blur-2xl"></div>
-          <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full animate-bounce-slow opacity-20 blur-md"></div>
-          <div className="absolute top-1/3 right-1/3 w-28 h-28 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full animate-pulse-slow opacity-15 blur-xl"></div>
+          <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
         </div>
         
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="mb-8">
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-4 drop-shadow-2xl">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent animate-pulse">
-                WordPlay
-              </span>
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent"> Wars</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto font-semibold drop-shadow-lg">
-              Battle opponents in real-time word puzzles. Unscramble, race, and dominate the leaderboard!
-            </p>
-          </div>
-          
-          <div className="flex justify-center mb-12">
-            <Button
-              onClick={handleQuickPlay}
-              className="bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-600 hover:via-pink-600 hover:to-red-600 px-10 py-6 text-xl font-bold transition-all duration-300 transform hover:scale-110 shadow-2xl hover:shadow-purple-500/50 border-0 text-white"
-              size="lg"
-            >
-              <Play className="w-6 h-6 mr-3" />
-              Quick Play
-            </Button>
-          </div>
-          
-          {/* Game Mode Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {gameModesData.map((mode) => {
-              const IconComponent = mode.icon;
-              const gradientColors = {
-                "game-coral": "from-orange-400 to-red-500",
-                "game-teal": "from-teal-400 to-cyan-500", 
-                "game-accent": "from-yellow-400 to-amber-500"
-              };
-              return (
-                <Card
-                  key={mode.id}
-                  className={`bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-lg border-2 border-gray-600/50 hover:border-transparent hover:shadow-2xl transition-all duration-500 cursor-pointer group transform hover:scale-105 ${
-                    !mode.available ? "opacity-60 cursor-not-allowed" : "hover:shadow-purple-500/25"
-                  }`}
-                  onClick={() => mode.available && handleGameModeSelect(mode.id)}
-                >
-                  <CardContent className="p-8 text-center relative overflow-hidden">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors[mode.color as keyof typeof gradientColors]} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}></div>
-                    <div className={`text-4xl mb-6 group-hover:scale-110 transition-all duration-500 relative z-10`}>
-                      <div className="w-20 h-20 mx-auto">
-                        <IconComponent />
-                      </div>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-3 text-white relative z-10">{mode.title}</h3>
-                    <p className="text-gray-300 text-base leading-relaxed relative z-10">{mode.description}</p>
-                    {!mode.available && (
-                      <div className="mt-4 relative z-10">
-                        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent text-sm font-bold">Coming Soon</span>
-                      </div>
-                    )}
-                    {mode.available && (
-                      <div className="mt-4 relative z-10">
-                        <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent text-sm font-bold">Available Now</span>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-game-primary via-game-secondary to-game-accent bg-clip-text text-transparent leading-tight">
+                WordPlay Wars
+              </h2>
+              <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                Challenge your mind with anagram puzzles, compete with players worldwide, 
+                and climb the leaderboard
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                onClick={handleQuickPlay}
+                size="lg"
+                className="bg-gradient-to-r from-game-primary to-game-secondary hover:from-game-primary/80 hover:to-game-secondary/80 text-white border-0 px-8 py-6 text-lg font-semibold shadow-2xl hover:shadow-game-primary/25 transition-all duration-300 transform hover:scale-105"
+              >
+                <Play className="mr-2 h-5 w-5" />
+                Quick Play
+              </Button>
+              
+              <Button 
+                onClick={() => setLocation("/leaderboard")}
+                variant="outline" 
+                size="lg"
+                className="border-2 border-game-accent text-game-accent hover:bg-game-accent hover:text-gray-900 px-8 py-6 text-lg font-semibold bg-gray-800/50 backdrop-blur-sm transition-all duration-300"
+              >
+                <Trophy className="mr-2 h-5 w-5" />
+                Leaderboard
+              </Button>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Game Modes Section */}
+      <section className="py-20 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Choose Your Challenge
+            </h3>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Test your skills across different word game modes, each offering unique challenges and rewards
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {gameModes.map((mode) => (
+              <Card 
+                key={mode.id}
+                className="bg-gray-800/50 border-gray-700 hover:border-gray-600 transition-all duration-300 group cursor-pointer backdrop-blur-sm"
+                onClick={() => handleGameModeSelect(mode.id)}
+              >
+                <CardContent className="p-8 text-center">
+                  <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-20 h-20 mx-auto">
+                      {mode.icon}
+                    </div>
+                  </div>
+                  
+                  <h4 className="text-2xl font-bold text-white mb-3">
+                    {mode.title}
+                  </h4>
+                  
+                  <p className="text-gray-400 mb-4 text-base leading-relaxed">
+                    {mode.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-center space-x-2 mb-6">
+                    <span className="text-sm text-gray-500">{mode.stats}</span>
+                  </div>
+                  
+                  <Button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleGameModeSelect(mode.id);
+                    }}
+                    className={`w-full bg-gradient-to-r ${mode.color} hover:opacity-90 text-white border-0 font-semibold py-3 transition-all duration-300 transform group-hover:scale-105`}
+                    disabled={!mode.available}
+                  >
+                    {mode.available ? 'Play Now' : 'Coming Soon'}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gray-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Why WordPlay Wars?
+            </h3>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              More than just word games - it's a complete brain training experience
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-game-primary to-game-secondary rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-semibold text-white mb-2">Fast-Paced</h4>
+              <p className="text-gray-400">Quick rounds that fit your schedule</p>
+            </div>
+
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-game-secondary to-game-accent rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-semibold text-white mb-2">Competitive</h4>
+              <p className="text-gray-400">Challenge players from around the world</p>
+            </div>
+
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-game-accent to-game-teal rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Trophy className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-semibold text-white mb-2">Rewarding</h4>
+              <p className="text-gray-400">Climb leaderboards and earn achievements</p>
+            </div>
+
+            <div className="text-center group">
+              <div className="w-16 h-16 bg-gradient-to-br from-game-teal to-game-primary rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <RotateCcw className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-semibold text-white mb-2">Endless</h4>
+              <p className="text-gray-400">New challenges every time you play</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded-3xl p-12 backdrop-blur-sm border border-gray-600">
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Ready to Test Your Word Skills?
+            </h3>
+            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              Join thousands of players in the ultimate word game challenge. 
+              Start playing now and see how you rank!
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                onClick={handleQuickPlay}
+                size="lg"
+                className="bg-gradient-to-r from-game-primary to-game-secondary hover:from-game-primary/80 hover:to-game-secondary/80 text-white border-0 px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              >
+                <Play className="mr-2 h-5 w-5" />
+                Start Playing Now
+              </Button>
+              
+              <Button 
+                onClick={() => setLocation("/leaderboard")}
+                variant="outline" 
+                size="lg"
+                className="border-2 border-gray-400 text-gray-300 hover:bg-gray-400 hover:text-gray-900 px-8 py-4 text-lg font-semibold transition-all duration-300"
+              >
+                <Trophy className="mr-2 h-5 w-5" />
+                View Leaderboard
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-game-primary to-game-secondary rounded-lg flex items-center justify-center">
+                <Gamepad className="text-white w-4 h-4" />
+              </div>
+              <h3 className="text-xl font-bold bg-gradient-to-r from-game-primary to-game-secondary bg-clip-text text-transparent">
+                WordPlay Wars
+              </h3>
+            </div>
+            <p className="text-gray-400 mb-6">
+              The ultimate word game experience for players of all skill levels.
+            </p>
+            <div className="flex justify-center space-x-6">
+              <button 
+                onClick={() => setLocation("/")}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                Play
+              </button>
+              <button 
+                onClick={() => setLocation("/leaderboard")}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                Leaderboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
