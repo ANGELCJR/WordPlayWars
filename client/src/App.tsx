@@ -7,6 +7,8 @@ import { AuthProvider } from "@/hooks/use-auth";
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/Landing";
 import Game from "@/pages/Game";
+import WordLadder from "@/pages/WordLadder";
+import SpeedType from "@/pages/SpeedType";
 import Leaderboard from "@/pages/Leaderboard";
 import AuthPage from "@/pages/AuthPage";
 
@@ -16,6 +18,8 @@ function Router() {
       <Route path="/" component={Landing} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/game" component={Game} />
+      <Route path="/word-ladder" component={WordLadder} />
+      <Route path="/speed-type" component={SpeedType} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route component={NotFound} />
     </Switch>
