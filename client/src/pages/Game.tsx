@@ -247,9 +247,18 @@ export default function Game() {
   // Game works without authentication for demo purposes
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-pink-900/20 text-white overflow-hidden relative">
+      {/* Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -inset-10 opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-gradient-to-r from-orange-500 to-red-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
+        </div>
+      </div>
+
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-gray-900/95 backdrop-blur-sm z-50 border-b border-gray-800">
+      <nav className="fixed top-0 w-full bg-gray-900/95 backdrop-blur-sm z-50 border-b border-gray-800/50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
@@ -292,36 +301,41 @@ export default function Game() {
         </div>
       </nav>
 
-      <div className="pt-20 pb-8">
+      <div className="pt-20 pb-8 relative z-10">
         {!gameState.gameStarted ? (
           // Game Start Screen
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="mb-8">
-              <h2 className="text-4xl font-bold mb-4">Anagram Attack</h2>
+              <h2 className="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-2xl">
+                <span className="bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
+                  Anagram
+                </span>
+                <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent"> Attack</span>
+              </h2>
               <p className="text-xl text-gray-300">
                 Unscramble letters to form words as fast as possible!
               </p>
             </div>
             
-            <Card className="bg-gray-800 border-gray-700 mb-8">
+            <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-orange-500/30 mb-8 backdrop-blur-sm shadow-2xl shadow-orange-500/20">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold mb-4">Game Rules</h3>
+                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-pink-500 bg-clip-text text-transparent">Game Rules</h3>
                 <div className="text-left space-y-3 text-gray-300">
-                  <p>• You have 60 seconds per round to solve each anagram</p>
-                  <p>• Score more points by solving faster</p>
-                  <p>• Complete {gameState.totalRounds} rounds to finish the game</p>
-                  <p>• Each correct answer adds to your streak</p>
+                  <p className="flex items-center"><span className="text-orange-400 mr-2">•</span> You have 60 seconds per round to solve each anagram</p>
+                  <p className="flex items-center"><span className="text-pink-400 mr-2">•</span> Score more points by solving faster</p>
+                  <p className="flex items-center"><span className="text-purple-400 mr-2">•</span> Complete {gameState.totalRounds} rounds to finish the game</p>
+                  <p className="flex items-center"><span className="text-cyan-400 mr-2">•</span> Each correct answer adds to your streak</p>
                 </div>
               </CardContent>
             </Card>
             
             <Button
               onClick={startGame}
-              className="bg-gradient-to-r from-game-success to-game-teal hover:from-game-teal hover:to-game-success px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 hover:from-pink-500 hover:via-red-500 hover:to-orange-500 px-12 py-6 text-xl font-bold transition-all duration-500 transform hover:scale-110 shadow-2xl shadow-orange-500/50 animate-pulse hover:animate-none border-2 border-white/20"
               size="lg"
             >
-              <Check className="w-5 h-5 mr-2" />
-              Start Game
+              <Zap className="w-6 h-6 mr-3 animate-spin" />
+              Start Attack!
             </Button>
           </div>
         ) : gameState.gameEnded ? (
@@ -413,12 +427,12 @@ export default function Game() {
           // Gameplay Screen
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Game Header */}
-            <Card className="bg-gray-800 border-gray-700 mb-8">
+            <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-orange-500/30 mb-8 backdrop-blur-sm shadow-2xl shadow-orange-500/20">
               <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row justify-between items-center">
                   <div className="flex items-center space-x-6 mb-4 sm:mb-0">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-game-accent">
+                      <div className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-pink-500 bg-clip-text text-transparent">
                         Round {gameState.currentRound}
                       </div>
                       <div className="text-sm text-gray-400">
@@ -426,17 +440,17 @@ export default function Game() {
                       </div>
                     </div>
                     
-                    <div className="w-16 h-16 rounded-full border-4 border-game-danger flex items-center justify-center relative">
-                      <span className="text-2xl font-bold text-game-danger">
+                    <div className="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center relative shadow-lg shadow-red-500/50">
+                      <span className="text-2xl font-bold text-red-400">
                         {gameState.timeRemaining}
                       </span>
-                      <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-game-danger animate-spin"></div>
+                      <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-red-400 animate-spin"></div>
                     </div>
                   </div>
                   
-                  <div className="text-center bg-gray-700 rounded-lg px-6 py-3">
-                    <div className="text-sm text-gray-400">Score</div>
-                    <div className="text-2xl font-bold text-game-success">
+                  <div className="text-center bg-gradient-to-br from-green-500/20 to-cyan-500/20 border border-green-500/30 rounded-lg px-6 py-3 shadow-lg shadow-green-500/20">
+                    <div className="text-sm text-green-400">Score</div>
+                    <div className="text-2xl font-bold text-green-300">
                       {gameState.score}
                     </div>
                   </div>
@@ -445,7 +459,7 @@ export default function Game() {
                 <div className="mt-4">
                   <Progress 
                     value={(gameState.currentRound / gameState.totalRounds) * 100} 
-                    className="h-2"
+                    className="h-3 bg-gray-700 rounded-full overflow-hidden"
                   />
                 </div>
               </CardContent>
@@ -454,49 +468,52 @@ export default function Game() {
             {/* Main Game Area */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               <div className="lg:col-span-3">
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-orange-500/30 backdrop-blur-sm shadow-2xl shadow-orange-500/20">
                   <CardContent className="p-8 text-center">
-                    <h2 className="text-2xl font-bold mb-2">Anagram Attack</h2>
-                    <p className="text-gray-400 mb-8">
+                    <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent">Anagram Attack</h2>
+                    <p className="text-gray-300 mb-8 text-lg">
                       Unscramble the letters to form a word
                     </p>
                     
                     {/* Scrambled Letters */}
-                    <div className="flex justify-center space-x-3 mb-8 flex-wrap gap-y-3">
+                    <div className="flex justify-center space-x-4 mb-8 flex-wrap gap-y-4">
                       {gameState.scrambledLetters.map((letter, index) => (
                         <div
                           key={index}
-                          className="w-16 h-16 bg-gradient-to-br from-game-primary to-game-secondary rounded-xl flex items-center justify-center text-2xl font-bold shadow-lg transform hover:scale-105 transition-transform cursor-pointer"
+                          className="w-20 h-20 bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl font-black shadow-2xl shadow-orange-500/50 transform hover:scale-110 hover:rotate-6 transition-all duration-300 cursor-pointer border-2 border-white/20 animate-pulse hover:animate-none"
+                          style={{
+                            animationDelay: `${index * 0.1}s`
+                          }}
                         >
-                          {letter}
+                          <span className="text-white drop-shadow-lg">{letter}</span>
                         </div>
                       ))}
                     </div>
                     
                     {/* Answer Input */}
-                    <div className="mb-6">
+                    <div className="mb-8">
                       <Input
                         type="text"
                         placeholder="Type your answer here..."
                         value={answer}
                         onChange={(e) => setAnswer(e.target.value.toUpperCase())}
                         onKeyPress={(e) => e.key === "Enter" && checkAnswer()}
-                        className="w-full max-w-md mx-auto bg-gray-700 border-2 border-gray-600 text-xl text-center text-white placeholder-gray-400 focus:border-game-primary"
+                        className="w-full max-w-lg mx-auto bg-gradient-to-r from-gray-700/90 to-gray-800/90 border-2 border-orange-500/50 text-2xl text-center text-white placeholder-gray-400 focus:border-orange-400 focus:shadow-lg focus:shadow-orange-400/30 rounded-xl py-4 backdrop-blur-sm"
                         autoFocus
                       />
                     </div>
                     
                     <Button
                       onClick={checkAnswer}
-                      className="bg-gradient-to-r from-game-success to-game-teal hover:from-game-teal hover:to-game-success px-8 py-3 font-semibold transition-all duration-300 transform hover:scale-105"
+                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-cyan-500 hover:from-cyan-500 hover:via-emerald-500 hover:to-green-500 px-12 py-4 text-lg font-bold transition-all duration-500 transform hover:scale-110 shadow-2xl shadow-green-500/50 border-2 border-white/20 animate-pulse hover:animate-none"
                     >
-                      <Check className="w-5 h-5 mr-2" />
+                      <Check className="w-6 h-6 mr-3" />
                       Submit Answer
                     </Button>
                     
                     {/* Hint */}
-                    <div className="mt-6 text-gray-400">
-                      💡 Hint: {gameState.currentWord.length} letters
+                    <div className="mt-8 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg shadow-lg shadow-yellow-500/20">
+                      <span className="text-yellow-400 text-lg">💡 Hint: {gameState.currentWord.length} letters</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -504,23 +521,24 @@ export default function Game() {
               
               {/* Activity Feed */}
               <div>
-                <Card className="bg-gray-800 border-gray-700">
+                <Card className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-purple-500/30 backdrop-blur-sm shadow-2xl shadow-purple-500/20">
                   <CardContent className="p-6">
-                    <h3 className="text-lg font-bold mb-4">Progress</h3>
+                    <h3 className="text-xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Progress</h3>
                     
                     <div className="space-y-3 text-sm">
                       {gameState.correctAnswers.map((answer, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-gray-300">{answer.word}</span>
-                          <Badge variant="secondary" className="bg-game-success text-white">
+                        <div key={index} className="flex justify-between items-center p-3 bg-gradient-to-r from-green-500/10 to-cyan-500/10 border border-green-500/20 rounded-lg">
+                          <span className="text-green-300 font-semibold">{answer.word}</span>
+                          <Badge className="bg-gradient-to-r from-green-500 to-cyan-500 text-white font-bold shadow-lg shadow-green-500/30">
                             +{answer.points}
                           </Badge>
                         </div>
                       ))}
                       
                       {gameState.correctAnswers.length === 0 && (
-                        <div className="text-gray-400 text-center py-4">
-                          No words solved yet
+                        <div className="text-gray-400 text-center py-8 bg-gradient-to-r from-gray-700/30 to-gray-800/30 border border-gray-600/30 rounded-lg">
+                          <span className="text-lg">🎯</span>
+                          <div className="mt-2">No words solved yet</div>
                         </div>
                       )}
                     </div>
